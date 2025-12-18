@@ -1,0 +1,2 @@
+/** Contains classes related to madlib creation and operation: the Madlib_File object itself, utility to blank source text, and utility to fill in blanked text*/
+package adam_barnett.madlibs.madlib_machine.madlibgeneration;

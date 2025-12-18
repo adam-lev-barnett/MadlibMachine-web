@@ -1,0 +1,38 @@
+package adam_barnett.madlibs.madlib_machine.tagger;
+
+import adam_barnett.madlibs.madlib_machine.madlibgeneration.Madlib_File;
+import edu.stanford.nlp.pipeline.CoreDocument;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+/*
+ * Uses Stanford CoreNLP for part-of-speech tagging and tokenization.
+ * CoreNLP is © Stanford University and distributed under the GNU General Public License v3.
+ * See: https://stanfordnlp.github.io/CoreNLP/
+ */
+
+/** Provided text is converted to CoreDocument object, allowing the CoreNLP library to annotate parts of speech for each word
+ * @see TextAnnotationProperties
+ * @see Madlib_File */
+public class TextAnnotater {
+
+    private final CoreDocument document;
+
+    /** Constructor creates document object upon instantiation with each word and punctuation identified with a part of speech */
+    public TextAnnotater(String text) {
+        this.document = new CoreDocument(text);
+        TextAnnotationProperties.getInstance().getPipeline().annotate(document);
+    }
+
+    /** If a Path has already been instantiated, constructor reads file and calls resulting String constructor */
+    public TextAnnotater(Path file) throws IOException {
+        this(Files.readString(file));
+    }
+
+    public CoreDocument getDocument() {
+        return document;
+    }
+
+}
