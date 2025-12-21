@@ -1,6 +1,6 @@
 package adam_barnett.madlibs.madlib_machine.tagger;
 
-import adam_barnett.madlibs.madlib_machine.madlibgeneration.Madlib_File;
+import adam_barnett.madlibs.madlib_machine.madlibgeneration.Madlib;
 import edu.stanford.nlp.pipeline.CoreDocument;
 
 import java.io.IOException;
@@ -15,7 +15,7 @@ import java.nio.file.Path;
 
 /** Provided text is converted to CoreDocument object, allowing the CoreNLP library to annotate parts of speech for each word
  * @see TextAnnotationProperties
- * @see Madlib_File */
+ * @see Madlib */
 public class TextAnnotater {
 
     private final CoreDocument document;

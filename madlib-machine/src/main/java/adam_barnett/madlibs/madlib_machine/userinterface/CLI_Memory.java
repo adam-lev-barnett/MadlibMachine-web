@@ -1,24 +1,20 @@
 package adam_barnett.madlibs.madlib_machine.userinterface;
 
-import adam_barnett.madlibs.madlib_machine.madlibgeneration.Madlib_File;
-import org.jetbrains.annotations.Nullable;
+import adam_barnett.madlibs.madlib_machine.madlibgeneration.Madlib;
+import adam_barnett.madlibs.madlib_machine.utility.exceptions.InvalidPartOfSpeechException;
 import adam_barnett.madlibs.madlib_machine.utility.exceptions.NullPOSListException;
 import adam_barnett.madlibs.madlib_machine.utility.exceptions.TextNotProcessedException;
-import adam_barnett.madlibs.madlib_machine.utility.filehandling.TextFileLoader;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /** Singleton command-line interface controller responsible for parsing user input to create blanked and filled-in madlibs.
  * Enum singleton to maintain thread safety, readability, and serialization.
- * @see Madlib_File
+ * @see Madlib
  * @author Adam Barnett */
-public enum CLI {
+public enum CLI_Memory {
     INSTANCE;
 
     private static final Scanner SCANNER = new Scanner(System.in);
@@ -27,27 +23,20 @@ public enum CLI {
     private static final Pattern DIGITS = Pattern.compile("[0-9]+");
 
     /** Used by Main to begin program logic*/
-    public static CLI getInstance() {
+    public static CLI_Memory getInstance() {
         return INSTANCE;
     }
 
     /** Main controller logic that facilitates the madlib creation process in steps by requesting filenames, calling helper methods, and confirming successful text processing*/
 
-    public void initiateMadlibCreation() throws NullPointerException, TextNotProcessedException, IOException, NullPOSListException {
+    public void initiateMadlibCreation() throws NullPointerException, TextNotProcessedException, IOException, NullPOSListException, InvalidPartOfSpeechException {
         System.out.println("Welcome to the Madlib_File Machine!");
         System.out.println();
 
-        System.out.println("Please enter filepath of .txt file or type \"quit\" to quit: ");
-        String filePath = SCANNER.nextLine();
+        System.out.println("Please enter text you want to madlibify");
+        String sourceText = SCANNER.nextLine();
 
-        // returns null if user quits, and exits the program
-        Path originalTextPath = getSourceTxtFile(filePath);
-
-        if (originalTextPath == null) System.out.println("I guess you don't want to madlibFile. There's nothing wrong with being a QUITTER. See ya next time!");
-        String originalText = TextFileLoader.loadTextFile(originalTextPath);
-
-        System.out.println("What would you like to save your blanked madlibFile as? Filename and/or path will be automatically appended with \".txt\"");
-        String blankMadlibFilename = SCANNER.nextLine() + ".txt";
+        if (sourceText.equals("quit")) return;
 
         /*  skipper variable: prompts user for how many madlibifiable words will be skipped before a madlibifiable word is blanked
          *  Madlibifiable words are words with parts of speech accepted by the Madlib_File Machine (nouns, adjectives, etc.).
@@ -60,42 +49,27 @@ public enum CLI {
            Madlib_File instance is saved to call its methods if the user intends to fill the Madlib_File in
          */
 
-        Madlib_File madlibFile = new Madlib_File(originalText, blankMadlibFilename, skipper);
+        Madlib madlib = new Madlib(sourceText, skipper);
 
         System.out.println();
+        System.out.println(madlib.getBlankedText());
 
         //~ Queries if the user wants to fill in the madlibFile; exits if no
         if (!queryFillInMadlib()) return;
-
-        System.out.println("What would you like to save your completed madlibFile as?");
-        String completedMadlibFilename = SCANNER.nextLine() + ".txt";
 
         System.out.println("You will now be prompted to fill in a word for each provided part of speech.");
         System.out.println();
 
         // Prompts the user with parts of speech for the purpose of obtaining a queue of words used to replace the speech blocks in the blanked Madlib_File
-        Queue<String> userWords = getReplacementWords(madlibFile.getPosList());
+        Queue<String> userWords = getReplacementWords(madlib.getPosList());
 
-        try {
-            madlibFile.fillInMadlib(userWords, completedMadlibFilename);
-            System.out.println("Congratulations! You did it! Whether you created a new spin on a short story or perverted your favorite bible chapter, thank you for having fun.");
-        } catch (IOException e) {
-            System.err.println("Madlib_File word replacement failed. You're stuck with the unfilled madlibFile until you try again");
-        }
+
+        madlib.fillInMadlib(userWords);
+        System.out.println(madlib.getFilledText());
+        System.out.println();
+        System.out.println("Congratulations! You did it! Whether you created a new spin on a short story or perverted your favorite bible chapter, thank you for having fun.");
 
         System.out.println("Goodbye.");
-    }
-
-    /** Parsing logic to obtain a valid filepath for the text to be madlibified*/
-    private @Nullable Path getSourceTxtFile(String filepath) {
-        Path originalTextPath = Paths.get(filepath);
-        while (!Files.exists(originalTextPath)) {
-            if (filepath.equalsIgnoreCase("quit")) return null;
-            System.err.println("Please enter a valid filepath or type \"quit\" to exit the program.");
-            filepath = SCANNER.nextLine();
-            originalTextPath = Paths.get(filepath);
-        }
-        return originalTextPath;
     }
 
     /** Helper method to ensure user is entering a proper numerical value for the madlibifiable skipper variable*/

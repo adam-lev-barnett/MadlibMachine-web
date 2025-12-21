@@ -6,28 +6,24 @@ import adam_barnett.madlibs.madlib_machine.utility.exceptions.TextNotProcessedEx
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnmodifiableView;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
+
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+
 import java.util.*;
 
 /** The core object that contains the source text file from which its MadlibBlanker and MadlibFiller can blank words in the document and fill in the blanks with user-determined words
- * @see MadlibBlanker
- * @see MadlibFiller
  * @author Adam Barnett */
 
-public class Madlib_Memory {
+public class Madlib {
 
     /** Used to pair the annotation identifiers from CoreNLP to clearer parts of speech. Example: CoreNLP tags nouns as "NN," so the program relays "NN" as "noun" to the rest of the program. */
     private static final HashMap<String, String> posMap = new HashMap<>();
 
     /** Utility class used to remove words from the source file and produce a new file with the blanked madlib */
-    private final MadlibBlanker_Memory blanker = new MadlibBlanker_Memory();
+    private final MadlibBlanker blanker = new MadlibBlanker();
 
     /** Utility class to fill in the blanked madlib with user-chosen words and write it to a new file. This is referred to as a filled madlib. */
-    private final MadlibFiller_Memory filler = new MadlibFiller_Memory();
+    private final MadlibFiller filler = new MadlibFiller();
 
     /** Converts CoreNLP tags with clearer part of speech identifiers. CoreNLP is a library that, in this program,
      * is used to annotate each word with a "token" that contains the word and its associated part of speech */
@@ -62,7 +58,7 @@ public class Madlib_Memory {
         posMap.put("UH", "interjection");
     }
 
-    public Madlib_Memory(String originalText, int skipper) throws IOException, TextNotProcessedException, InvalidPartOfSpeechException {
+    public Madlib(String originalText, int skipper) throws IOException, TextNotProcessedException, InvalidPartOfSpeechException {
         setOriginalText(originalText);
         setAnnotatedText(originalText);
         blankOutMadlib(skipper);
@@ -78,7 +74,7 @@ public class Madlib_Memory {
     }
 
     /** Primarily called by CLI to create a filled-in Madlib_File. Calls the instance's MadlibFiller to actually create and write to the file. Public method callable by CLI. */
-    public void fillInMadlib(Queue<String> replacementWords, String outFilename) throws IOException {
+    public void fillInMadlib(Queue<String> replacementWords) throws IOException {
         this.filledText = filler.fillInMadlib(blankedText, replacementWords);
     }
 
@@ -101,6 +97,14 @@ public class Madlib_Memory {
 
     public static @NotNull @UnmodifiableView Map<String, String> getPosMap() {
         return Collections.unmodifiableMap(posMap);
+    }
+
+    public String getBlankedText() {
+        return blankedText;
+    }
+
+    public String getFilledText() {
+        return filledText;
     }
 
 }
