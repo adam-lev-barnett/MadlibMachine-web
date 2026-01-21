@@ -13,7 +13,8 @@ import edu.stanford.nlp.pipeline.*;
 /** Singleton that determines which properties words should be tagged with. The properties are then passed through a pipeline through which TextAnnotater parses source text to madlibify.
  * The only properties requested are the words themselves (tokens) and their parts of speech.
  * @see TextAnnotater
- * @see madlibgeneration.Madlib*/
+*/
+
 public enum TextAnnotationProperties {
     INSTANCE;
 

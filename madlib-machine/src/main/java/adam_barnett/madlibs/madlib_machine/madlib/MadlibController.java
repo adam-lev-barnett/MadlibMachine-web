@@ -1,21 +1,27 @@
 package adam_barnett.madlibs.madlib_machine.madlib;
 
-import adam_barnett.madlibs.madlib_machine.madlibgeneration.Madlib;
 import adam_barnett.madlibs.madlib_machine.utility.exceptions.InvalidPartOfSpeechException;
 import adam_barnett.madlibs.madlib_machine.utility.exceptions.TextNotProcessedException;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("madlibs")
 public class MadlibController {
 
-    @GetMapping("/madlibify")
-    public Madlib madlibifyText(String originalText, int skipper) throws TextNotProcessedException, InvalidPartOfSpeechException, IOException {
-        return new Madlib(originalText, skipper);
+    private final MadlibService madlibService;
+
+    @PostMapping("/madlibify")
+    public BlankMadlibResponse madlibifyText(@RequestBody BlankMadlibRequest sourceTextAndSkipper) throws TextNotProcessedException, InvalidPartOfSpeechException, IOException {
+        return madlibService.generateBlankMadlib(sourceTextAndSkipper.sourceText(), sourceTextAndSkipper.skipper());
     }
+
+//    @PostMapping("/fillMadlib")
+//    public FilledMadlibResponse fillInMadlib(@RequestBody FillMadlibRequest blankTextAndWordList) throws IOException {
+//        return madlibService.fillInMadlib(blankTextAndWordList.blankedText(), blankTextAndWordList.partsOfSpeech());
+//    }
 
 }

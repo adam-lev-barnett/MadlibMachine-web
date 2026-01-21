@@ -1,13 +1,12 @@
 package adam_barnett.madlibs.madlib_machine.madlibgeneration;
 
+import adam_barnett.madlibs.madlib_machine.madlib.BlankMadlibResponse;
 import adam_barnett.madlibs.madlib_machine.tagger.TextAnnotater;
 import adam_barnett.madlibs.madlib_machine.utility.exceptions.InvalidPartOfSpeechException;
-import adam_barnett.madlibs.madlib_machine.utility.exceptions.TextNotProcessedException;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.*;
 
 /** Processes Madlib_File through the "blanking" process, which takes the madlib's source text and blanks out certain words to be filled in later by the user.
@@ -16,13 +15,9 @@ import java.util.*;
 
 @Component
 public class MadlibBlanker {
-    private StringBuilder sb = new StringBuilder();
 
     /** Identifies where in the text file the words should be replaced with the user's new words */
     private static final Set<String> wordsToSkip = new HashSet<>();
-
-    /** Reference to Madlib's pos list to verify correct blanking of word. This is important in case the source text already has words within square brackets */
-    private static final Map<String, String> posMap = Madlib.getPosMap();
 
     static {
         // List of words to avoid that have the accepted parts of speech
@@ -61,56 +56,69 @@ public class MadlibBlanker {
 
     /** Removes the skipper-th word with a part of speech in the posBlocks hashset
      * @param skipper determines the frequency of madlibification (replacement of word with part-of-speech text block). Example: if skipper == 3, removeMadlibifiables will clear every third madlibifiable word
-     * @see Madlib_File for more skipper information
      * @return returns List of parts of speech removed so user can replace the removed words when prompted by CLI */
-    public List<String> removeMadlibifiables(TextAnnotater annotatedText, int skipper) throws IOException, TextNotProcessedException, InvalidPartOfSpeechException {
+    public BlankMadlibResponse removeMadlibifiables(TextAnnotater annotatedText, int skipper)
+            throws InvalidPartOfSpeechException {
+
+        StringBuilder sb = new StringBuilder();
 
         if (skipper < 1) {
             skipper = 1;
             System.out.println("Invalid skip increment. Skip increment auto set to 1.");
         }
+
+        // i tracks how many madlibifiable words have been seen since the last replacement
         int i = 1;
 
-
         String replacementBlock;
-        // posList stores parts of speech for each removed word; list is passed to method that prompts user to input replacement words based on the POS
+
+        // posList stores parts of speech for each removed word; list is passed to method that
+        // prompts user to input replacement words based on the POS
         ArrayList<String> posList = new ArrayList<>();
 
-        for (CoreLabel token : annotatedText.getDocument().tokens()) {
+        List<CoreLabel> tokens = annotatedText.getDocument().tokens();
 
-            // First word won't have a space added before it
-            boolean isFirstWord = annotatedText.getDocument().tokens().indexOf(token) == 0;
+        // First word won't have a space added before it
+        for (int tokenIndex = 0; tokenIndex < tokens.size(); tokenIndex++) {
+
+            CoreLabel token = tokens.get(tokenIndex);
+            boolean isFirstWord = (tokenIndex == 0);
 
             // Retrieve the [part of speech block] to replace the word in the new madlib
-            // Map above returns null if part of speech can't be madlibified
-            replacementBlock = posMap.get((token.get(CoreAnnotations.PartOfSpeechAnnotation.class)));
+            // Map returns null if part of speech can't be madlibified
+            replacementBlock =
+                    PosMap.posMap.get(token.get(CoreAnnotations.PartOfSpeechAnnotation.class));
 
-            // disregard any words in wordsToSkip by resetting the block to null
-            if (wordsToSkip.contains(token.word())) replacementBlock = null;
+            // Disregard any words in wordsToSkip by resetting the block to null
+            if (wordsToSkip.contains(token.word().toLowerCase())) {
+                replacementBlock = null;
+            }
+
+            if (replacementBlock == null) {
+                // Word is not madlibifiable; just write it
+                justWriteWord(token, isFirstWord, sb);
+                continue;
+            }
 
             if (i < skipper) {
-                justWriteWord(token, isFirstWord);
+                justWriteWord(token, isFirstWord, sb);
                 // i only increments when the current word is madlibifiable
-                if (replacementBlock != null) i++;
+                i++;
             }
             // the skipper count resets after a word is madlibified
             else {
-                if (replacementBlock != null) {
-                    replaceWordWithBlock(isFirstWord, replacementBlock);
-                    posList.add(replacementBlock);
-                    i = 1;
-                }
-                else {
-                    justWriteWord(token, isFirstWord);
-                }
+                replaceWordWithBlock(isFirstWord, replacementBlock, sb);
+                posList.add(replacementBlock);
+                i = 1;
             }
         }
-        return Collections.unmodifiableList(posList);
+
+        return new BlankMadlibResponse(sb.toString(), posList);
     }
 
     /** Like justWriteWord but handles Strings instead of tokens to print the part of speech returned by the part of speech map inside square brackets */
-    private void replaceWordWithBlock(boolean isFirstWord, String replacementBlock) throws IOException, InvalidPartOfSpeechException {
-        if (!posMap.containsValue(replacementBlock)) {
+    private void replaceWordWithBlock(boolean isFirstWord, String replacementBlock, StringBuilder sb) throws InvalidPartOfSpeechException {
+        if (!PosMap.posMap.containsValue(replacementBlock)) {
             sb.append("[YouMessedUp]");
             throw new InvalidPartOfSpeechException("Passed invalid part of speech. Replacing word with [YouMessedUp]");
         }
@@ -122,7 +130,7 @@ public class MadlibBlanker {
 
     /** Helper method for removeMadlibifiable() that writes each word to a file with a preceding space. Adds space before each word for simple avoidance of spaces before punctuation.
      * Nothing is added to the punctuation character itself*/
-    private void justWriteWord(CoreLabel token, boolean isFirstWord) throws IOException {
+    private void justWriteWord(CoreLabel token, boolean isFirstWord, StringBuilder sb) {
 
         if (token.word().matches("\\p{Punct}") || isFirstWord) {
             sb.append(token.get(CoreAnnotations.TextAnnotation.class));
@@ -130,13 +138,4 @@ public class MadlibBlanker {
         else sb.append(" " + token.get(CoreAnnotations.TextAnnotation.class));
     }
 
-    /** Returns blanked madlib to Madlib object and clears the stringbuilder because the stored value is no longer needed*/
-    String extractBlankMadlib() {
-        String blankMadlib = sb.toString();
-
-        // Clear stringbuilder instance from memory because it will be stored in the madlib object itself
-        sb = new StringBuilder();
-
-        return blankMadlib;
-    }
 }
