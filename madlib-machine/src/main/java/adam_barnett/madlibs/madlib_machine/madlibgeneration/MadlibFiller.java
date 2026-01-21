@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import java.util.Queue;
 
 /**
- * Utility class that takes madlibified madlib (txt file with some words replaced by [part of speech] blocks) and fills in with user's replacement words collected from the CLI*/
+ * Utility class that takes madlibified madlib (Stringwith some words replaced by [part of speech] blocks) and fills in with user's replacement words collected from the CLI*/
 
 @Component
 public class MadlibFiller {
