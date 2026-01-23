@@ -11,6 +11,7 @@
 	<groupId>adam-barnett.madlibs</groupId>
 	<artifactId>madlibFile-machine</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
 	<name>madlibFile-machine</name>
 	<description>App for creating and filling out madlibs</description>
 	<url/>
@@ -62,13 +63,18 @@
 
 
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>
+                        adam_barnett.madlibs.madlib_machine.MadlibMachineApplication
+                    </mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
