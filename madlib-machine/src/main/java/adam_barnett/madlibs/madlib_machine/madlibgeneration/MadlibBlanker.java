@@ -100,7 +100,7 @@ public class MadlibBlanker {
             // Retrieve the [part of speech block] to replace the word in the new madlib
             // Map returns null if part of speech can't be madlibified
             replacementBlock =
-                    PosMap.posMap.get(token.get(CoreAnnotations.PartOfSpeechAnnotation.class).toLowerCase());
+                    PosMap.posMap.get(token.get(CoreAnnotations.PartOfSpeechAnnotation.class));
 
             // Disregard any words in wordsToSkip by resetting the block to null
             if (wordsToSkip.contains(token.word().toLowerCase())) {
