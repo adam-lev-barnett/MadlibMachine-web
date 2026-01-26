@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("madlibs")
+@CrossOrigin(origins = "https://madlib-frontend-deploy.vercel.app")
 public class MadlibController {
 
     private final MadlibService madlibService;
