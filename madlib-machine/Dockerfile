@@ -1,20 +1,26 @@
-# Step 1: Build the JAR (using Maven)
-FROM maven:3.9-eclipse-temurin-17 AS build
+# Step 1: Build the JAR with Java 21
+FROM maven:3.9.9-eclipse-temurin-21 AS build
 WORKDIR /app
+
+# Copy the pom.xml first to cache dependencies
 COPY pom.xml .
-# Download dependencies first (faster builds later)
 RUN mvn dependency:go-offline -B
+
+# Copy the source and build
 COPY src ./src
 RUN mvn package -DskipTests
 
-# Step 2: Runtime (The actual "container" that runs on the server)
-FROM eclipse-temurin:17-jre-jammy
+# Step 2: Runtime with Java 21
+FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
 
-# IMPORTANT: CoreNLP needs RAM.
-# We limit the JVM to 3GB so it doesn't crash a 4GB server.
-ENV JAVA_OPTS="-Xmx3g -Xss512k -XX:+UseSerialGC"
+# Copy the JAR from the build stage
+# The wildcard * ensures it finds the versioned JAR
+COPY --from=build /app/target/madlibFile-machine-*.jar app.jar
+
+# Memory settings for Stanford NLP
+ENV JAVA_OPTS="-Xmx3g -Xms2g -XX:+UseSerialGC"
 
 EXPOSE 8080
+
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
