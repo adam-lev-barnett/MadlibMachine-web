@@ -17,7 +17,7 @@ public enum PosMap {
         posMap.put("NNS", "pluralNoun");
         posMap.put("VB", "verb");
         posMap.put("VBD", "verbPast");
-        // posReplacements.put("VBG", "gerund");
+        posMap.put("VBG", "verbEndingInIng");
         posMap.put("VBZ", "verbEndingInS");
         posMap.put("JJ", "adjective");
         // posReplacements.put("JJR", "adjective ending in \"er\"");
