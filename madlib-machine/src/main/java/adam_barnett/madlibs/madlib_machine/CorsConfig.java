@@ -10,11 +10,8 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins(
-                        "https://madlib-frontend-deploy-97r19iulr.vercel.app"
-                )
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
-                .allowCredentials(false);
+                .allowedOriginPatterns("https://*.vercel.app")
+                .allowedMethods("GET", "POST", "OPTIONS")
+                .allowedHeaders("*");
     }
 }
