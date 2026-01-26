@@ -30,6 +30,7 @@ public class MadlibBlanker {
         wordsToSkip.add("use");
         wordsToSkip.add("used");
         wordsToSkip.add("have");
+        wordsToSkip.add("having");
         wordsToSkip.add("has");
         wordsToSkip.add("had");
         wordsToSkip.add("shall");
@@ -52,6 +53,18 @@ public class MadlibBlanker {
         wordsToSkip.add("does");
         wordsToSkip.add("did");
         wordsToSkip.add("do");
+        wordsToSkip.add("doing");
+        wordsToSkip.add("about");
+        wordsToSkip.add("that");
+        wordsToSkip.add("this");
+        wordsToSkip.add("they");
+        wordsToSkip.add("he");
+        wordsToSkip.add("she");
+        wordsToSkip.add("my");
+        wordsToSkip.add("yours");
+        wordsToSkip.add("his");
+        wordsToSkip.add("hers");
+        wordsToSkip.add("theirs");
     }
 
     /** Removes the skipper-th word with a part of speech in the posBlocks hashset
@@ -87,7 +100,7 @@ public class MadlibBlanker {
             // Retrieve the [part of speech block] to replace the word in the new madlib
             // Map returns null if part of speech can't be madlibified
             replacementBlock =
-                    PosMap.posMap.get(token.get(CoreAnnotations.PartOfSpeechAnnotation.class));
+                    PosMap.posMap.get(token.get(CoreAnnotations.PartOfSpeechAnnotation.class).toLowerCase());
 
             // Disregard any words in wordsToSkip by resetting the block to null
             if (wordsToSkip.contains(token.word().toLowerCase())) {
