@@ -3,8 +3,10 @@ package adam_barnett.madlibs.madlib_machine.madlibgeneration;
 import java.util.HashMap;
 import java.util.Map;
 
+/** Controls the parts of speech annotations you want to pull and be able to replace from CoreNLP*/
 public enum PosMap {
 
+    // Singleton
     INSTANCE;
 
     static final Map<String, String> posMap = new HashMap<>();
