@@ -14,11 +14,11 @@ public enum PosMap {
     static {
         // Comment out parts of speech you don't want to blank
         posMap.put("NN", "noun");
-        posMap.put("NNS", "pluralNoun");
+        posMap.put("NNS", "plural noun");
         posMap.put("VB", "verb");
-        posMap.put("VBD", "verbPast");
-        posMap.put("VBG", "verbEndingInIng");
-        posMap.put("VBZ", "verbEndingInS");
+        posMap.put("VBD", "verb-past");
+        posMap.put("VBG", "verb Ending In -ing");
+        posMap.put("VBZ", "verb Ending In -S");
         posMap.put("JJ", "adjective");
         // posReplacements.put("JJR", "adjective ending in \"er\"");
         posMap.put("RB", "adverb");
