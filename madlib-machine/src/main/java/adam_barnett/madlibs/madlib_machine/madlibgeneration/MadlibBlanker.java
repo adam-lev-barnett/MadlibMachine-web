@@ -1,6 +1,7 @@
 package adam_barnett.madlibs.madlib_machine.madlibgeneration;
 
 import adam_barnett.madlibs.madlib_machine.madlib.BlankMadlibResponse;
+import adam_barnett.madlibs.madlib_machine.tagger.SentenceFragment;
 import adam_barnett.madlibs.madlib_machine.tagger.TextAnnotater;
 import adam_barnett.madlibs.madlib_machine.utility.exceptions.InvalidPartOfSpeechException;
 import edu.stanford.nlp.ling.CoreAnnotations;
@@ -22,7 +23,9 @@ public class MadlibBlanker {
     public BlankMadlibResponse removeMadlibifiables(TextAnnotater annotatedText, int skipper)
             throws InvalidPartOfSpeechException {
 
-        StringBuilder sb = new StringBuilder();
+        // StringBuilder sb = new StringBuilder();
+
+        List<SentenceFragment> fragments = new ArrayList<>();
 
         if (skipper < 1) {
             skipper = 1;
