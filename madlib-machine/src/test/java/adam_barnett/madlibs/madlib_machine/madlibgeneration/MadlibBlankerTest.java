@@ -26,7 +26,7 @@ public class MadlibBlankerTest {
     void testRemoveEveryMadlibifiablesRemovesAllWords() throws InvalidPartOfSpeechException {
         // Skipper set to 1 to ensure all words skipped
         BlankMadlibResponse result = madlibBlanker.removeMadlibifiables(textAnnotater, 1);
-        assertEquals("The [adjective] [adjective] [noun] [verbEndingInS] over the [adjective] [noun]", result.blankedText());
+        assertEquals("The [adjective] [adjective] [noun] [verb ending in -s] over the [adjective] [noun]", result.blankedText());
     }
 
     @Test
@@ -36,7 +36,7 @@ public class MadlibBlankerTest {
         partsOfSpeech.add("adjective");
         partsOfSpeech.add("adjective");
         partsOfSpeech.add("noun");
-        partsOfSpeech.add("verbEndingInS");
+        partsOfSpeech.add("verb ending in -s");
         partsOfSpeech.add("adjective");
         partsOfSpeech.add("noun");
 
