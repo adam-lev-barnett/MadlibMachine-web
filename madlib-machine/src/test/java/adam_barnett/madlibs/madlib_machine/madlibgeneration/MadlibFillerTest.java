@@ -19,7 +19,7 @@ public class MadlibFillerTest {
     // Need to check
     @Test
     public void testMadlibFillerReplacesPOSBlocksAccurately() {
-        String blankText = "The [adjective] [adjective] [noun] [verbEndingInS] over the [adjective] [noun]";
+        String blankText = "The [adjective] [adjective] [verb, past-tense] [verb ending in -s] over the [adjective] [noun].";
         Queue<String> replacementWords = new ArrayDeque<>();
         replacementWords.add("goofy");
         replacementWords.add("purple");
@@ -30,6 +30,6 @@ public class MadlibFillerTest {
 
         String result = madlibFiller.fillInMadlib(blankText, replacementWords);
 
-        assertEquals("The goofy purple potato wiggles over the boring clown ", result);
+        assertEquals("The goofy purple potato wiggles over the boring clown.", result);
     }
 }

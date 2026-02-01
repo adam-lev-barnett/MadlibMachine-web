@@ -21,7 +21,7 @@ public class MadlibFiller {
 
         // Use string buffer for thread safety
         StringBuffer sb = new StringBuffer();
-        Pattern pattern = Pattern.compile("\\[([\\w-]+)]");
+        Pattern pattern = Pattern.compile("\\[([\\w- ,]+)]");
 
         Matcher matcher = pattern.matcher(blankedMadlib);
 

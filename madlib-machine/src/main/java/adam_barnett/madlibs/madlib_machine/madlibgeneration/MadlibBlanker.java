@@ -23,9 +23,7 @@ public class MadlibBlanker {
     public BlankMadlibResponse removeMadlibifiables(TextAnnotater annotatedText, int skipper)
             throws InvalidPartOfSpeechException {
 
-        // StringBuilder sb = new StringBuilder();
-
-        List<SentenceFragment> fragments = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
 
         if (skipper < 1) {
             skipper = 1;
