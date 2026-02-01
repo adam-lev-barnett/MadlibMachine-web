@@ -4,7 +4,6 @@ import adam_barnett.madlibs.madlib_machine.madlibgeneration.MadlibBlanker;
 import adam_barnett.madlibs.madlib_machine.madlibgeneration.MadlibFiller;
 import adam_barnett.madlibs.madlib_machine.tagger.TextAnnotater;
 import adam_barnett.madlibs.madlib_machine.utility.exceptions.InvalidPartOfSpeechException;
-import adam_barnett.madlibs.madlib_machine.utility.exceptions.TextNotProcessedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

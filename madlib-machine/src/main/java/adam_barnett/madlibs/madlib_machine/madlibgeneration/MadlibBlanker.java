@@ -1,6 +1,7 @@
 package adam_barnett.madlibs.madlib_machine.madlibgeneration;
 
 import adam_barnett.madlibs.madlib_machine.madlib.BlankMadlibResponse;
+import adam_barnett.madlibs.madlib_machine.tagger.SentenceFragment;
 import adam_barnett.madlibs.madlib_machine.tagger.TextAnnotater;
 import adam_barnett.madlibs.madlib_machine.utility.exceptions.InvalidPartOfSpeechException;
 import edu.stanford.nlp.ling.CoreAnnotations;
@@ -15,57 +16,6 @@ import java.util.*;
 
 @Component
 public class MadlibBlanker {
-
-    /** Identifies where in the text file the words should be replaced with the user's new words */
-    private static final Set<String> wordsToSkip = new HashSet<>();
-
-    static {
-        // List of words to avoid that have the accepted parts of speech
-        wordsToSkip.add("be");
-        wordsToSkip.add("being");
-        wordsToSkip.add("am");
-        wordsToSkip.add("not");
-        wordsToSkip.add("using");
-        wordsToSkip.add("uses");
-        wordsToSkip.add("use");
-        wordsToSkip.add("used");
-        wordsToSkip.add("have");
-        wordsToSkip.add("having");
-        wordsToSkip.add("has");
-        wordsToSkip.add("had");
-        wordsToSkip.add("shall");
-        wordsToSkip.add("is");
-        wordsToSkip.add("was");
-        wordsToSkip.add("were");
-        wordsToSkip.add("isn't");
-        wordsToSkip.add("behalf");
-        wordsToSkip.add("can");
-        wordsToSkip.add("cannot");
-        wordsToSkip.add("can't");
-        wordsToSkip.add("will");
-        wordsToSkip.add("won't");
-        wordsToSkip.add("would");
-        wordsToSkip.add("must");
-        wordsToSkip.add("might");
-        wordsToSkip.add("may");
-        wordsToSkip.add("should");
-        wordsToSkip.add("could");
-        wordsToSkip.add("does");
-        wordsToSkip.add("did");
-        wordsToSkip.add("do");
-        wordsToSkip.add("doing");
-        wordsToSkip.add("about");
-        wordsToSkip.add("that");
-        wordsToSkip.add("this");
-        wordsToSkip.add("they");
-        wordsToSkip.add("he");
-        wordsToSkip.add("she");
-        wordsToSkip.add("my");
-        wordsToSkip.add("yours");
-        wordsToSkip.add("his");
-        wordsToSkip.add("hers");
-        wordsToSkip.add("theirs");
-    }
 
     /** Removes the skipper-th word with a part of speech in the posBlocks hashset
      * @param skipper determines the frequency of madlibification (replacement of word with part-of-speech text block). Example: if skipper == 3, removeMadlibifiables will clear every third madlibifiable word
@@ -103,7 +53,7 @@ public class MadlibBlanker {
                     PosMap.posMap.get(token.get(CoreAnnotations.PartOfSpeechAnnotation.class));
 
             // Disregard any words in wordsToSkip by resetting the block to null
-            if (wordsToSkip.contains(token.word().toLowerCase())) {
+            if (WordsToSkip.wordsToSkip.contains(token.word().toLowerCase())) {
                 replacementBlock = null;
             }
 
@@ -149,6 +99,13 @@ public class MadlibBlanker {
             sb.append(token.get(CoreAnnotations.TextAnnotation.class));
         }
         else sb.append(" " + token.get(CoreAnnotations.TextAnnotation.class));
+    }
+
+    public static void main(String[] args) throws InvalidPartOfSpeechException {
+        TextAnnotater annotatedText = new TextAnnotater("Hello, I am a banana with two fingers and I am playing with a big pony who is eating a carrot");
+        MadlibBlanker blanker = new MadlibBlanker();
+        System.out.println((blanker.removeMadlibifiables(annotatedText, 2).toString()));
+
     }
 
 }

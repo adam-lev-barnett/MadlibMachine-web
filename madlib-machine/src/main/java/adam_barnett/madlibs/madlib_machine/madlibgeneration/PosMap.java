@@ -11,14 +11,15 @@ public enum PosMap {
 
     static final Map<String, String> posMap = new HashMap<>();
 
+    // Ensure that any punctuation included in the POS map is adjusted in the MadlibFiller regex
     static {
         // Comment out parts of speech you don't want to blank
         posMap.put("NN", "noun");
-        posMap.put("NNS", "pluralNoun");
+        posMap.put("NNS", "plural noun");
         posMap.put("VB", "verb");
-        posMap.put("VBD", "verbPast");
-        posMap.put("VBG", "verbEndingInIng");
-        posMap.put("VBZ", "verbEndingInS");
+        posMap.put("VBD", "verb, past-tense");
+        posMap.put("VBG", "verb ending in -ing");
+        posMap.put("VBZ", "verb ending in -s");
         posMap.put("JJ", "adjective");
         // posReplacements.put("JJR", "adjective ending in \"er\"");
         posMap.put("RB", "adverb");
