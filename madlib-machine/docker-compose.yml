@@ -1,0 +1,38 @@
+services:
+  # Service 1: The Database
+  db:
+    image: postgres:16-alpine # pulled from Docker Hub
+    container_name: madlib-db
+    environment: # setup instructions for when Postgres boots
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: madlib_db
+    ports:
+      - "5432:5432" #default listening port for all PostgreSQL databases
+    volumes: # Links to hidden computer folder that contains database's internal storage so it persists on the hard drive if deleting the container
+      - postgres_data:/var/lib/postgresql/data
+
+  # Service 2: Your Spring Boot Backend
+  backend:
+    build: . #Look in the current folder, find the Dockerfile, build it
+    container_name: madlib-backend
+    ports:
+      - "8080:8080"
+    environment:
+      # binds to variable in application.properties: spring.datasource.url
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/madlib_db
+      # Use JDBC to speak language of PostgreSQL
+      # db is the database inside the container named db at the top
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+
+      #Hibernate persistence
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+
+  # Won't load Spring Boot until db is set up
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
