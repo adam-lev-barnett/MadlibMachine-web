@@ -1,5 +1,8 @@
-package adam_barnett.madlibs.madlib_machine.security;
+package adam_barnett.madlibs.madlib_machine.security.config;
 
+import adam_barnett.madlibs.madlib_machine.security.JwtAuthFilter;
+import adam_barnett.madlibs.madlib_machine.security.OAuth2SuccessHandler;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,10 +31,15 @@ public class SecurityConfig {
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/oauth2/**", "/login/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/madlibs/madlibify").permitAll()
                         .requestMatchers(HttpMethod.POST, "/madlibs/fillMadlib").permitAll()
                         .requestMatchers(HttpMethod.GET, "/madlibs/all").authenticated()
                         .anyRequest().authenticated()
+                )
+                .exceptionHandling(e -> e
+                        .authenticationEntryPoint((req, res, ex) ->
+                                res.sendError(HttpServletResponse.SC_UNAUTHORIZED))
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(oAuth2SuccessHandler)

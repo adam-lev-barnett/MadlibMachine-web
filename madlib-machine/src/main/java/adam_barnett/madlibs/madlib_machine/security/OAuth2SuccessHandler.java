@@ -1,7 +1,7 @@
 package adam_barnett.madlibs.madlib_machine.security;
 
-import adam_barnett.madlibs.madlib_machine.persistence.User;
-import adam_barnett.madlibs.madlib_machine.persistence.UserRepository;
+import adam_barnett.madlibs.madlib_machine.users.User;
+import adam_barnett.madlibs.madlib_machine.users.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

@@ -1,10 +1,11 @@
-package adam_barnett.madlibs.madlib_machine.madlib;
+package adam_barnett.madlibs.madlib_machine.madlib.mvc;
 
+import adam_barnett.madlibs.madlib_machine.madlib.DTOs.BlankMadlibResponse;
+import adam_barnett.madlibs.madlib_machine.madlib.DTOs.FilledMadlibResponse;
+import adam_barnett.madlibs.madlib_machine.madlib.DTOs.SavedMadlibResponse;
 import adam_barnett.madlibs.madlib_machine.madlibgeneration.MadlibBlanker;
 import adam_barnett.madlibs.madlib_machine.madlibgeneration.MadlibFiller;
-import adam_barnett.madlibs.madlib_machine.persistence.Madlib;
-import adam_barnett.madlibs.madlib_machine.persistence.MadlibRepository;
-import adam_barnett.madlibs.madlib_machine.persistence.User;
+import adam_barnett.madlibs.madlib_machine.users.User;
 import adam_barnett.madlibs.madlib_machine.tagger.TextAnnotater;
 import adam_barnett.madlibs.madlib_machine.utility.exceptions.InvalidPartOfSpeechException;
 import lombok.RequiredArgsConstructor;
