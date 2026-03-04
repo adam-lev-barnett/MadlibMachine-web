@@ -12,6 +12,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.UUID;
 
+/** Generates, parses, and validates tokens for user creation and authentication*/
 @Service
 public class JwtService {
 

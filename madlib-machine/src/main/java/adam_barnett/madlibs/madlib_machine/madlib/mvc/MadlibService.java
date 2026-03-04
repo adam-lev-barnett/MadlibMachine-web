@@ -55,8 +55,7 @@ public class MadlibService {
     }
 
     public List<SavedMadlibResponse> getAllMadlibs() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return madlibRepository.findByUser(user).stream()
+        return madlibRepository.findAll().stream()
                 .map(m -> new SavedMadlibResponse(m.getId(), m.getCompletedText(), m.getCreatedAt()))
                 .toList();
     }

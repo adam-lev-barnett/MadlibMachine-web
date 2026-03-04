@@ -15,6 +15,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/** Determine access for users. Only registered users should be able to save Madlibs */
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -29,12 +30,16 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                /* When profile editing and access is added, authorization will be limited.
+                    For now, the only difference is that user madlibs will be saved to the database */
+
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/oauth2/**", "/login/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/madlibs/madlibify").permitAll()
                         .requestMatchers(HttpMethod.POST, "/madlibs/fillMadlib").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/madlibs/all").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/madlibs/all").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(e -> e
