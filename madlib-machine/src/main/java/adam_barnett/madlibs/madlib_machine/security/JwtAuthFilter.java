@@ -1,7 +1,6 @@
 package adam_barnett.madlibs.madlib_machine.security;
 
-import adam_barnett.madlibs.madlib_machine.persistence.User;
-import adam_barnett.madlibs.madlib_machine.persistence.UserRepository;
+import adam_barnett.madlibs.madlib_machine.users.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

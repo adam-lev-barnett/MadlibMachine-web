@@ -1,5 +1,6 @@
-package adam_barnett.madlibs.madlib_machine.persistence;
+package adam_barnett.madlibs.madlib_machine.madlib.mvc;
 
+import adam_barnett.madlibs.madlib_machine.users.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

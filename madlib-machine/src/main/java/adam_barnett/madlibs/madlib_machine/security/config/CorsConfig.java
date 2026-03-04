@@ -1,4 +1,4 @@
-package adam_barnett.madlibs.madlib_machine;
+package adam_barnett.madlibs.madlib_machine.security.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

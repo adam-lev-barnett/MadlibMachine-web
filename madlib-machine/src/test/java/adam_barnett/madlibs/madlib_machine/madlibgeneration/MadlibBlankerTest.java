@@ -1,6 +1,6 @@
 package adam_barnett.madlibs.madlib_machine.madlibgeneration;
 
-import adam_barnett.madlibs.madlib_machine.madlib.BlankMadlibResponse;
+import adam_barnett.madlibs.madlib_machine.madlib.DTOs.BlankMadlibResponse;
 import adam_barnett.madlibs.madlib_machine.tagger.TextAnnotater;
 import adam_barnett.madlibs.madlib_machine.utility.exceptions.InvalidPartOfSpeechException;
 import org.junit.jupiter.api.BeforeAll;

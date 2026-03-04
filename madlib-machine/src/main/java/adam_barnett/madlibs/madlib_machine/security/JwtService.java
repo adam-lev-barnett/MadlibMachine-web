@@ -1,6 +1,6 @@
 package adam_barnett.madlibs.madlib_machine.security;
 
-import adam_barnett.madlibs.madlib_machine.persistence.User;
+import adam_barnett.madlibs.madlib_machine.users.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,5 +1,6 @@
-package adam_barnett.madlibs.madlib_machine.madlib;
+package adam_barnett.madlibs.madlib_machine.madlib.mvc;
 
+import adam_barnett.madlibs.madlib_machine.madlib.DTOs.*;
 import adam_barnett.madlibs.madlib_machine.utility.exceptions.InvalidPartOfSpeechException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
