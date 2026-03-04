@@ -34,4 +34,10 @@ public class MadlibController {
         return madlibService.getAllMadlibs();
     }
 
+    /** Returns only the madlibs belonging to the authenticated user */
+    @GetMapping("/myMadlibs")
+    public List<SavedMadlibResponse> getMyMadlibs() {
+        return madlibService.getMyMadlibs();
+    }
+
 }
