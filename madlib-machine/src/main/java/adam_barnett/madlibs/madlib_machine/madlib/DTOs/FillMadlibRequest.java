@@ -1,4 +1,4 @@
-package adam_barnett.madlibs.madlib_machine.madlib;
+package adam_barnett.madlibs.madlib_machine.madlib.DTOs;
 
 import java.util.List;
 

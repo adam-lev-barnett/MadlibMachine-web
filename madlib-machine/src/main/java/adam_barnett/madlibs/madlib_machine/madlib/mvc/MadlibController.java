@@ -1,8 +1,11 @@
-package adam_barnett.madlibs.madlib_machine.madlib;
+package adam_barnett.madlibs.madlib_machine.madlib.mvc;
 
+import adam_barnett.madlibs.madlib_machine.madlib.DTOs.*;
 import adam_barnett.madlibs.madlib_machine.utility.exceptions.InvalidPartOfSpeechException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /** Primary means of frontend communication for source text submission, backend blanking, and receiving user-submitted replacement words to return the completed madlib*/
 @RestController
@@ -23,6 +26,18 @@ public class MadlibController {
     @PostMapping("/fillMadlib")
     public FilledMadlibResponse fillInMadlib(@RequestBody FillMadlibRequest blankTextAndWordList) {
         return madlibService.fillInMadlib(blankTextAndWordList.blankedText(), blankTextAndWordList.replacementWords());
+    }
+
+    /** Returns all completed madlibs stored in the database */
+    @GetMapping("/all")
+    public List<SavedMadlibResponse> getAllMadlibs() {
+        return madlibService.getAllMadlibs();
+    }
+
+    /** Returns only the madlibs belonging to the authenticated user */
+    @GetMapping("/myMadlibs")
+    public List<SavedMadlibResponse> getMyMadlibs() {
+        return madlibService.getMyMadlibs();
     }
 
 }

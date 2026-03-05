@@ -1,4 +1,4 @@
-package adam_barnett.madlibs.madlib_machine;
+package adam_barnett.madlibs.madlib_machine.security.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -10,7 +10,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOriginPatterns("https://*.vercel.app")
+                .allowedOriginPatterns("https://*.vercel.app", "http://localhost:*")
                 .allowedMethods("GET", "POST", "OPTIONS")
                 .allowedHeaders("*");
     }

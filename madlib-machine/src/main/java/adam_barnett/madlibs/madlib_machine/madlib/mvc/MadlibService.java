@@ -1,13 +1,19 @@
-package adam_barnett.madlibs.madlib_machine.madlib;
+package adam_barnett.madlibs.madlib_machine.madlib.mvc;
 
+import adam_barnett.madlibs.madlib_machine.madlib.DTOs.BlankMadlibResponse;
+import adam_barnett.madlibs.madlib_machine.madlib.DTOs.FilledMadlibResponse;
+import adam_barnett.madlibs.madlib_machine.madlib.DTOs.SavedMadlibResponse;
 import adam_barnett.madlibs.madlib_machine.madlibgeneration.MadlibBlanker;
 import adam_barnett.madlibs.madlib_machine.madlibgeneration.MadlibFiller;
+import adam_barnett.madlibs.madlib_machine.users.User;
 import adam_barnett.madlibs.madlib_machine.tagger.TextAnnotater;
 import adam_barnett.madlibs.madlib_machine.utility.exceptions.InvalidPartOfSpeechException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.*;
 
 /*
@@ -23,6 +29,7 @@ public class MadlibService {
 
     private final MadlibBlanker madlibBlanker;
     private final MadlibFiller madlibFiller;
+    private final MadlibRepository madlibRepository;
 
     /** Removes the skipper-th madlibifiable word with a part of speech in the posBlocks hashset. Madlibifiable word are tagged with parts of speech included in the posMap.
      Assigns the instance's posList returned by the helper method.
@@ -37,8 +44,25 @@ public class MadlibService {
     public FilledMadlibResponse fillInMadlib(String blankedText, List<String> replacementWords){
         Queue<String> replacementWordsQueue = new ArrayDeque<>(replacementWords);
         String completedMadlib = madlibFiller.fillInMadlib(blankedText, replacementWordsQueue);
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getPrincipal() instanceof User user) {
+            madlibRepository.save(new Madlib(completedMadlib, user));
+        }
         return new FilledMadlibResponse(completedMadlib);
     }
 
+    public List<SavedMadlibResponse> getAllMadlibs() {
+        return madlibRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt")).stream()
+                .map(m -> new SavedMadlibResponse(m.getId(), m.getCompletedText(), m.getCreatedAt()))
+                .toList();
+    }
+
+    public List<SavedMadlibResponse> getMyMadlibs() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return madlibRepository.findByUser(user).stream()
+                .map(m -> new SavedMadlibResponse(m.getId(), m.getCompletedText(), m.getCreatedAt()))
+                .toList();
+    }
 
 }
