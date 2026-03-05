@@ -9,6 +9,7 @@ import adam_barnett.madlibs.madlib_machine.users.User;
 import adam_barnett.madlibs.madlib_machine.tagger.TextAnnotater;
 import adam_barnett.madlibs.madlib_machine.utility.exceptions.InvalidPartOfSpeechException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -47,15 +48,12 @@ public class MadlibService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.getPrincipal() instanceof User user) {
             madlibRepository.save(new Madlib(completedMadlib, user));
-        } else {
-            madlibRepository.save(new Madlib(completedMadlib));
         }
-
         return new FilledMadlibResponse(completedMadlib);
     }
 
     public List<SavedMadlibResponse> getAllMadlibs() {
-        return madlibRepository.findAll().stream()
+        return madlibRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt")).stream()
                 .map(m -> new SavedMadlibResponse(m.getId(), m.getCompletedText(), m.getCreatedAt()))
                 .toList();
     }
