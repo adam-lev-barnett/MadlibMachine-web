@@ -33,7 +33,13 @@ public class SecurityConfig {
 
                 /* When profile editing and access is added, authorization will be limited.
                     For now, the only difference is that user madlibs will be saved to the database */
-
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers(
+                                "/madlibs/madlibify",
+                                "/madlibs/fillMadlib",
+                                "/madlibs/all"
+                        )
+                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/oauth2/**", "/login/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
