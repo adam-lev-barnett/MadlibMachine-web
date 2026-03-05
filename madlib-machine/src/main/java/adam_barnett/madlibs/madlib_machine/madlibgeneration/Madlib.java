@@ -1,5 +1,6 @@
 package adam_barnett.madlibs.madlib_machine.madlibgeneration;
 
+import adam_barnett.madlibs.madlib_machine.madlib.DTOs.BlankMadlibResponse;
 import adam_barnett.madlibs.madlib_machine.tagger.TextAnnotater;
 import adam_barnett.madlibs.madlib_machine.utility.exceptions.InvalidPartOfSpeechException;
 import adam_barnett.madlibs.madlib_machine.utility.exceptions.TextNotProcessedException;
@@ -69,8 +70,9 @@ public class Madlib {
        @param skipper determines the frequency of madlib blanking (madlibification). Example: if skipper == 3, the method will clear every third madlibifiable word. */
     private void blankOutMadlib(int skipper) throws IOException, TextNotProcessedException, InvalidPartOfSpeechException {
         if (annotatedText == null) throw new TextNotProcessedException("Text could not be processed due to null text");
-        this.posList = blanker.removeMadlibifiables(annotatedText, skipper);
-        this.blankedText = blanker.extractBlankMadlib();
+        BlankMadlibResponse blanked = blanker.removeMadlibifiables(annotatedText, skipper);
+        this.posList = blanked.partsOfSpeech();
+        this.blankedText = blanked.blankedText();
     }
 
     /** Primarily called by CLI to create a filled-in Madlib_File. Calls the instance's MadlibFiller to actually create and write to the file. Public method callable by CLI. */
