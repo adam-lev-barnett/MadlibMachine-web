@@ -11,7 +11,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("madlibs")
-@CrossOrigin(origins = "https://madlib-frontend-deploy.vercel.app")
+@CrossOrigin(origins = {"https://madlib-frontend-deploy.vercel.app", "http://localhost:5173"})
 public class MadlibController {
 
     private final MadlibService madlibService;
