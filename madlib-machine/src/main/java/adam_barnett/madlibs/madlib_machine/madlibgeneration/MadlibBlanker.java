@@ -100,11 +100,4 @@ public class MadlibBlanker {
         else sb.append(" " + token.get(CoreAnnotations.TextAnnotation.class));
     }
 
-    public static void main(String[] args) throws InvalidPartOfSpeechException {
-        TextAnnotater annotatedText = new TextAnnotater("Hello, I am a banana with two fingers and I am playing with a big pony who is eating a carrot");
-        MadlibBlanker blanker = new MadlibBlanker();
-        System.out.println((blanker.removeMadlibifiables(annotatedText, 2).toString()));
-
-    }
-
 }
