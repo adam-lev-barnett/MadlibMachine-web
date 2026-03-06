@@ -21,6 +21,7 @@ public class User {
 
     private String email;
     private String name;
+    @Column(columnDefinition = "TEXT")
     private String pictureUrl;
 
     public User(String googleId, String email, String name, String pictureUrl) {
