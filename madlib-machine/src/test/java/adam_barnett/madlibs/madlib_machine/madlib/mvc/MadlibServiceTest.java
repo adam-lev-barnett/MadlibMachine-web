@@ -47,7 +47,7 @@ class MadlibServiceTest {
 
     @Test
     void fillInMadlib_whenAuthenticated_savesMadlibWithUser() {
-        User user = new User("g123", "test@example.com", "Test User", null);
+        User user = new User("g123", "test@example.com", "Test User");
         setAuthenticatedUser(user);
         when(madlibFiller.fillInMadlib(anyString(), any())).thenReturn("completed madlib");
 
@@ -97,7 +97,7 @@ class MadlibServiceTest {
 
     @Test
     void getMyMadlibs_returnsOnlyUserMadlibs() {
-        User user = new User("g123", "test@example.com", "Test User", null);
+        User user = new User("g123", "test@example.com", "Test User");
         setAuthenticatedUser(user);
         UUID id = UUID.randomUUID();
         LocalDateTime now = LocalDateTime.now();
