@@ -8,8 +8,10 @@ import adam_barnett.madlibs.madlib_machine.madlibgeneration.MadlibBlanker;
 import adam_barnett.madlibs.madlib_machine.madlibgeneration.MadlibFiller;
 import adam_barnett.madlibs.madlib_machine.users.User;
 import adam_barnett.madlibs.madlib_machine.tagger.TextAnnotater;
+import adam_barnett.madlibs.madlib_machine.users.UserRepository;
 import adam_barnett.madlibs.madlib_machine.utility.exceptions.InvalidPartOfSpeechException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,6 +33,7 @@ public class MadlibService {
     private final MadlibBlanker madlibBlanker;
     private final MadlibFiller madlibFiller;
     private final MadlibRepository madlibRepository;
+    private final UserRepository userRepository;
 
     /** Removes the skipper-th madlibifiable word with a part of speech in the posBlocks hashset. Madlibifiable word are tagged with parts of speech included in the posMap.
      Assigns the instance's posList returned by the helper method.
@@ -42,6 +45,7 @@ public class MadlibService {
         return madlibBlanker.removeMadlibifiables(annotatedText, skipper);
     }
 
+    /* Can toggle between only saving madlibs for signed in users or saving everyone's. Currently saving everyone's for metrics*/
     public FilledMadlibResponse fillInMadlib(String blankedText, List<String> replacementWords){
         Queue<String> replacementWordsQueue = new ArrayDeque<>(replacementWords);
         String completedMadlib = madlibFiller.fillInMadlib(blankedText, replacementWordsQueue);
@@ -50,6 +54,12 @@ public class MadlibService {
         if (auth != null && auth.getPrincipal() instanceof User user) {
             madlibRepository.save(new Madlib(completedMadlib, user));
         }
+        else {
+            User publicUser = userRepository.findByUserId("00000000-0000-0000-0000-000000000001")
+                    .orElseThrow();
+            madlibRepository.save(new Madlib(completedMadlib, publicUser));
+        }
+
         return new FilledMadlibResponse(completedMadlib);
     }
 
