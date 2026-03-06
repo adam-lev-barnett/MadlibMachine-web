@@ -54,6 +54,11 @@ public class MadlibService {
         if (auth != null && auth.getPrincipal() instanceof User user) {
             madlibRepository.save(new Madlib(completedMadlib, user));
         }
+        //! Hard coding admin email to use for public Madlib cache
+        else {
+            Optional<User> publicUser = userRepository.findByEmail("tricerasaurusrex@gmail.com");
+            madlibRepository.save(new Madlib(completedMadlib, publicUser.get()));
+        }
 
         return new FilledMadlibResponse(completedMadlib);
     }
