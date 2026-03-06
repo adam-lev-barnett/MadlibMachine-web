@@ -21,6 +21,7 @@ public class User {
 
     private String email;
     private String name;
+
     public User(String googleId, String email, String name) {
         this.googleId = googleId;
         this.email = email;
