@@ -54,6 +54,11 @@ public class MadlibService {
         if (auth != null && auth.getPrincipal() instanceof User user) {
             madlibRepository.save(new Madlib(completedMadlib, user));
         }
+        //! Hard coding admin ID
+        else {
+            Optional<User> publicUser = userRepository.findByUserId("96294076-3f19-4998-971e-e193eb9266a3");
+            madlibRepository.save(new Madlib(completedMadlib, publicUser.get()));
+        }
 
         return new FilledMadlibResponse(completedMadlib);
     }
