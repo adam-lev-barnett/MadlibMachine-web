@@ -32,7 +32,7 @@ public class MadlibFiller {
                 continue;
             }
 
-            String replacementWord = replacementWords.poll();
+            String replacementWord = replacementWords.poll().toLowerCase();
 
             // Use quoteReplacement over the replacement word due to appendReplacement following RegEx formatting
             // appendReplacement appends everything since the previous match and then replaces the next word
