@@ -38,12 +38,11 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             String googleId  = oauthUser.getAttribute("sub");
             String email     = oauthUser.getAttribute("email");
             String name      = oauthUser.getAttribute("name");
-            String picture   = oauthUser.getAttribute("picture");
 
             log.info("OAuth2 login: googleId={}, email={}", googleId, email);
 
             User user = userRepository.findByGoogleId(googleId)
-                    .orElseGet(() -> userRepository.save(new User(googleId, email, name, picture)));
+                    .orElseGet(() -> userRepository.save(new User(googleId, email, name)));
 
             String token = jwtService.generateToken(user);
             response.sendRedirect(frontendUrl + "/auth/callback?token=" + token);

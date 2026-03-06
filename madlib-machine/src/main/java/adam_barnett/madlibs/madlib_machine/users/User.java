@@ -21,13 +21,9 @@ public class User {
 
     private String email;
     private String name;
-    @Column(columnDefinition = "TEXT")
-    private String pictureUrl;
-
-    public User(String googleId, String email, String name, String pictureUrl) {
+    public User(String googleId, String email, String name) {
         this.googleId = googleId;
         this.email = email;
         this.name = name;
-        this.pictureUrl = pictureUrl;
     }
 }
