@@ -54,11 +54,6 @@ public class MadlibService {
         if (auth != null && auth.getPrincipal() instanceof User user) {
             madlibRepository.save(new Madlib(completedMadlib, user));
         }
-        else {
-            User publicUser = userRepository.findByUserId("00000000-0000-0000-0000-000000000001")
-                    .orElseThrow();
-            madlibRepository.save(new Madlib(completedMadlib, publicUser));
-        }
 
         return new FilledMadlibResponse(completedMadlib);
     }
