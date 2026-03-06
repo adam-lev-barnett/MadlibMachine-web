@@ -11,12 +11,17 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 
 /** Uses Google OAuth to verify or create user, save user in the database if not found, and return token */
 @Component
 @RequiredArgsConstructor
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(OAuth2SuccessHandler.class);
 
     private final UserRepository userRepository;
     private final JwtService jwtService;
@@ -28,16 +33,23 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException {
-        OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
-        String googleId  = oauthUser.getAttribute("sub");
-        String email     = oauthUser.getAttribute("email");
-        String name      = oauthUser.getAttribute("name");
-        String picture   = oauthUser.getAttribute("picture");
+        try {
+            OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
+            String googleId  = oauthUser.getAttribute("sub");
+            String email     = oauthUser.getAttribute("email");
+            String name      = oauthUser.getAttribute("name");
+            String picture   = oauthUser.getAttribute("picture");
 
-        User user = userRepository.findByGoogleId(googleId)
-                .orElseGet(() -> userRepository.save(new User(googleId, email, name, picture)));
+            log.info("OAuth2 login: googleId={}, email={}", googleId, email);
 
-        String token = jwtService.generateToken(user);
-        response.sendRedirect(frontendUrl + "/auth/callback?token=" + token);
+            User user = userRepository.findByGoogleId(googleId)
+                    .orElseGet(() -> userRepository.save(new User(googleId, email, name, picture)));
+
+            String token = jwtService.generateToken(user);
+            response.sendRedirect(frontendUrl + "/auth/callback?token=" + token);
+        } catch (Exception e) {
+            log.error("OAuth2 login failed", e);
+            response.sendRedirect(frontendUrl + "/auth/callback?error=login_failed");
+        }
     }
 }
