@@ -15,7 +15,7 @@ public class MadlibFiller {
 
     /** Responsible for replacing the part of speech blocks in the blanked madlib with the list of words prompted by the CLI
      * @param blankedMadlib Text resulting from the MadlibBlanker that has a number of words replaced by text blocks displaying their associated parts of speech
-     * @param replacementWords The list of words the user chose to replace each removed word (prompted by the CLI class). */
+     * @param replacementWords The list of words the user chose to replace each removed word . */
 
     public String fillInMadlib(@NotNull String blankedMadlib, Queue<String> replacementWords) {
 

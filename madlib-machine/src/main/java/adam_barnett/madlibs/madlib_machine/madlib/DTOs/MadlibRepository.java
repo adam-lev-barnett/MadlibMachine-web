@@ -1,5 +1,6 @@
-package adam_barnett.madlibs.madlib_machine.madlib.mvc;
+package adam_barnett.madlibs.madlib_machine.madlib.DTOs;
 
+import adam_barnett.madlibs.madlib_machine.madlib.mvc.Madlib;
 import adam_barnett.madlibs.madlib_machine.users.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 

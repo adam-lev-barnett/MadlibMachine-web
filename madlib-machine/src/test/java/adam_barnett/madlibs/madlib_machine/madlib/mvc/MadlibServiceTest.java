@@ -1,6 +1,7 @@
 package adam_barnett.madlibs.madlib_machine.madlib.mvc;
 
 import adam_barnett.madlibs.madlib_machine.madlib.DTOs.FilledMadlibResponse;
+import adam_barnett.madlibs.madlib_machine.madlib.DTOs.MadlibRepository;
 import adam_barnett.madlibs.madlib_machine.madlib.DTOs.SavedMadlibResponse;
 import adam_barnett.madlibs.madlib_machine.madlibgeneration.MadlibBlanker;
 import adam_barnett.madlibs.madlib_machine.madlibgeneration.MadlibFiller;
@@ -29,7 +30,8 @@ class MadlibServiceTest {
 
     @Mock MadlibBlanker madlibBlanker;
     @Mock MadlibFiller madlibFiller;
-    @Mock MadlibRepository madlibRepository;
+    @Mock
+    MadlibRepository madlibRepository;
     @InjectMocks MadlibService madlibService;
 
     @AfterEach
