@@ -55,5 +55,7 @@ public enum WordsToSkip {
         wordsToSkip.add("his");
         wordsToSkip.add("hers");
         wordsToSkip.add("theirs");
+        wordsToSkip.add("everywhere");
+        wordsToSkip.add("anywhere");
     }
 }
