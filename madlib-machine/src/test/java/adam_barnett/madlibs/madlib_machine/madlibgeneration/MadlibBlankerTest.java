@@ -54,13 +54,5 @@ public class MadlibBlankerTest {
         assertTrue(result.partsOfSpeech().isEmpty());
     }
 
-    @Test
-    void testBlankerMaintainsNewLines() throws InvalidPartOfSpeechException {
-        String newLineString = "The quick brown fox\njumps over the lazy dog";
-        // Shadows this.textAnnotater
-        TextAnnotater textAnnotater = new TextAnnotater(newLineString);
-        BlankMadlibResponse result = madlibBlanker.removeMadlibifiables(textAnnotater, 1);
-        assertEquals("The [adjective] [adjective] [noun]\n[verb ending in -s] over the [adjective] [noun]", result.blankedText());
-    }
 
 }

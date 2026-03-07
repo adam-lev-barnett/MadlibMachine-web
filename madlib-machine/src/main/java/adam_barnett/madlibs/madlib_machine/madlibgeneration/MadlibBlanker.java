@@ -38,15 +38,13 @@ public class MadlibBlanker {
         // prompts user to input replacement words based on the POS
         ArrayList<String> posList = new ArrayList<>();
 
-        String originalText = annotatedText.getDocument().text();
         List<CoreLabel> tokens = annotatedText.getDocument().tokens();
-        int prevEnd = 0;
 
-        for (CoreLabel token : tokens) {
+        // First word won't have a space added before it
+        for (int tokenIndex = 0; tokenIndex < tokens.size(); tokenIndex++) {
 
-            int tokenStart = token.get(CoreAnnotations.CharacterOffsetBeginAnnotation.class);
-            int tokenEnd = token.get(CoreAnnotations.CharacterOffsetEndAnnotation.class);
-            String precedingWhitespace = originalText.substring(prevEnd, tokenStart);
+            CoreLabel token = tokens.get(tokenIndex);
+            boolean isFirstWord = (tokenIndex == 0);
 
             // Retrieve the [part of speech block] to replace the word in the new madlib
             // Map returns null if part of speech can't be madlibified
@@ -59,27 +57,46 @@ public class MadlibBlanker {
             }
 
             if (replacementBlock == null) {
-                sb.append(precedingWhitespace).append(token.get(CoreAnnotations.TextAnnotation.class));
-            } else if (i < skipper) {
-                sb.append(precedingWhitespace).append(token.get(CoreAnnotations.TextAnnotation.class));
+                justWriteWord(token, isFirstWord, sb);
+                continue;
+            }
+
+            if (i < skipper) {
+                justWriteWord(token, isFirstWord, sb);
                 // i only increments when the current word is madlibifiable
                 i++;
             }
             // the skipper count resets after a word is madlibified
             else {
-                if (!PosMap.posMap.containsValue(replacementBlock)) {
-                    sb.append("[YouMessedUp]");
-                    throw new InvalidPartOfSpeechException("Passed invalid part of speech. Replacing word with [YouMessedUp]");
-                }
-                sb.append(precedingWhitespace).append("[").append(replacementBlock).append("]");
+                replaceWordWithBlock(isFirstWord, replacementBlock, sb);
                 posList.add(replacementBlock);
                 i = 1;
             }
-
-            prevEnd = tokenEnd;
         }
 
         return new BlankMadlibResponse(sb.toString(), posList);
+    }
+
+    /** Like justWriteWord but handles Strings instead of tokens to print the part of speech returned by the part of speech map inside square brackets */
+    private void replaceWordWithBlock(boolean isFirstWord, String replacementBlock, StringBuilder sb) throws InvalidPartOfSpeechException {
+        if (!PosMap.posMap.containsValue(replacementBlock)) {
+            sb.append("[YouMessedUp]");
+            throw new InvalidPartOfSpeechException("Passed invalid part of speech. Replacing word with [YouMessedUp]");
+        }
+        if (isFirstWord) {
+            sb.append("[" + replacementBlock + "]");
+        }
+        else sb.append(" [" + replacementBlock + "]");
+    }
+
+    /** Helper method for removeMadlibifiable() that writes each word to a file with a preceding space. Adds space before each word for simple avoidance of spaces before punctuation.
+     * Nothing is added to the punctuation character itself*/
+    private void justWriteWord(CoreLabel token, boolean isFirstWord, StringBuilder sb) {
+
+        if (token.word().matches("\\p{Punct}") || isFirstWord) {
+            sb.append(token.get(CoreAnnotations.TextAnnotation.class));
+        }
+        else sb.append(" " + token.get(CoreAnnotations.TextAnnotation.class));
     }
 
 }
