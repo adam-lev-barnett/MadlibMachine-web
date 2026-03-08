@@ -16,7 +16,6 @@ public class MadlibFillerTest {
         madlibFiller = new MadlibFiller();
     }
 
-    // Need to check
     @Test
     public void testMadlibFillerReplacesPOSBlocksAccurately() {
         String blankText = "The [adjective] [adjective] [verb, past-tense] [verb ending in -s] over the [adjective] [noun].";
@@ -32,4 +31,20 @@ public class MadlibFillerTest {
 
         assertEquals("The goofy purple potato wiggles over the boring clown.", result);
     }
+    @Test
+    public void testMadlibFillerUsesCorrectAnOrA() {
+        String blankText = "An [adjective] [adjective] [verb, past-tense] [verb ending in -s] over the [adjective] [noun].";
+        Queue<String> replacementWords = new ArrayDeque<>();
+        replacementWords.add("goofy");
+        replacementWords.add("purple");
+        replacementWords.add("potato");
+        replacementWords.add("wiggles");
+        replacementWords.add("boring");
+        replacementWords.add("clown");
+
+        String result = madlibFiller.fillInMadlib(blankText, replacementWords);
+
+        assertEquals("A goofy purple potato wiggles over the boring clown.", result);
+    }
+
 }
