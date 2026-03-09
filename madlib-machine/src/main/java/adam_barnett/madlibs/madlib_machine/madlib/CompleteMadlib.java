@@ -17,6 +17,8 @@ public class CompleteMadlib {
     @NotNull
     @Getter @Setter private String text;
 
+    @Getter @Setter private String blankedText;
+
     @Override
     public String toString() {
         return text;

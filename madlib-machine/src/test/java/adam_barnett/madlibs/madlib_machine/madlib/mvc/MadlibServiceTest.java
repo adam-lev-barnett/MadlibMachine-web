@@ -30,8 +30,7 @@ class MadlibServiceTest {
 
     @Mock MadlibBlanker madlibBlanker;
     @Mock MadlibFiller madlibFiller;
-    @Mock
-    MadlibRepository madlibRepository;
+    @Mock MadlibRepository madlibRepository;
     @InjectMocks MadlibService madlibService;
 
     @AfterEach
@@ -85,6 +84,7 @@ class MadlibServiceTest {
         when(madlib.getId()).thenReturn(id);
         when(madlib.getCompletedText()).thenReturn("some madlib");
         when(madlib.getCreatedAt()).thenReturn(now);
+        when(madlib.getBlankedText()).thenReturn("some [noun]");
         when(madlibRepository.findAll(any(Sort.class))).thenReturn(List.of(madlib));
 
         List<SavedMadlibResponse> result = madlibService.getAllMadlibs();
@@ -92,6 +92,7 @@ class MadlibServiceTest {
         assertEquals(1, result.size());
         assertEquals(id, result.get(0).id());
         assertEquals("some madlib", result.get(0).completedText());
+        assertEquals("some [noun]", result.get(0).blankedText());
         assertEquals(now, result.get(0).createdAt());
     }
 
@@ -104,6 +105,7 @@ class MadlibServiceTest {
         Madlib madlib = mock(Madlib.class);
         when(madlib.getId()).thenReturn(id);
         when(madlib.getCompletedText()).thenReturn("my madlib");
+
         when(madlib.getCreatedAt()).thenReturn(now);
         when(madlibRepository.findByUser(user)).thenReturn(List.of(madlib));
 

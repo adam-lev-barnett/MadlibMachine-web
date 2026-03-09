@@ -11,7 +11,6 @@ import adam_barnett.madlibs.madlib_machine.tagger.TextAnnotater;
 import adam_barnett.madlibs.madlib_machine.users.UserRepository;
 import adam_barnett.madlibs.madlib_machine.utility.exceptions.InvalidPartOfSpeechException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -52,7 +51,7 @@ public class MadlibService {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.getPrincipal() instanceof User user) {
-            madlibRepository.save(new Madlib(completedMadlib, user));
+            madlibRepository.save(new Madlib(completedMadlib, blankedText, user));
         }
 
         return new FilledMadlibResponse(completedMadlib);
@@ -60,14 +59,14 @@ public class MadlibService {
 
     public List<SavedMadlibResponse> getAllMadlibs() {
         return madlibRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt")).stream()
-                .map(m -> new SavedMadlibResponse(m.getId(), m.getCompletedText(), m.getCreatedAt()))
+                .map(m -> new SavedMadlibResponse(m.getId(), m.getCompletedText(), m.getBlankedText(), m.getCreatedAt()))
                 .toList();
     }
 
     public List<SavedMadlibResponse> getMyMadlibs() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return madlibRepository.findByUser(user).stream()
-                .map(m -> new SavedMadlibResponse(m.getId(), m.getCompletedText(), m.getCreatedAt()))
+                .map(m -> new SavedMadlibResponse(m.getId(), m.getCompletedText(), m.getBlankedText(), m.getCreatedAt()))
                 .toList();
     }
 
