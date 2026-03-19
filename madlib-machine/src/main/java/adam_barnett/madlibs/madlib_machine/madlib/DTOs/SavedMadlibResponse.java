@@ -4,5 +4,5 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 /** DTO for returning a stored madlib from the database */
-public record SavedMadlibResponse(UUID id, String completedText, LocalDateTime createdAt) {
+public record SavedMadlibResponse(UUID id, String completedText, String blankedText, LocalDateTime createdAt) {
 }

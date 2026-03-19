@@ -4,6 +4,7 @@ import adam_barnett.madlibs.madlib_machine.users.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -27,6 +28,10 @@ public class Madlib {
 
     private LocalDateTime createdAt;
 
+    @Column(columnDefinition = "TEXT")
+    @Getter @Setter
+    private String blankedText;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -36,8 +41,9 @@ public class Madlib {
         this.createdAt = LocalDateTime.now();
     }
 
-    public Madlib(String completedText, User user) {
+    public Madlib(String completedText, String blankedText, User user) {
         this.completedText = completedText;
+        this.blankedText = blankedText;
         this.createdAt = LocalDateTime.now();
         this.user = user;
     }
