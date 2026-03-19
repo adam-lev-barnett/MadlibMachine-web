@@ -96,7 +96,7 @@ public class MadlibFiller {
 
     /** Determines the correct preceding article for the replacement word*/
     private String correctArticleFor(String word) {
-        return word.matches("(?i)[aeiou].*") ? "an" : "a";
+        return word.matches("(?i)[aeiouAEIOU].*") ? "an" : "a";
     }
 
 }
