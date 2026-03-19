@@ -66,7 +66,7 @@ public class MadlibFiller {
                 • Append new article to replacement word
              */
             String article = null;
-            String potentialArticle = sb.substring(Math.max(sb.length(), sb.length() - 4));
+            String potentialArticle = sb.substring(Math.max(0, sb.length() - 4));
 
             if (potentialArticle.equals(" a ") || potentialArticle.equals(" a\n")) {
                 article = "a";
