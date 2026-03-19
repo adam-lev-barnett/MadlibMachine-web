@@ -49,24 +49,26 @@ public class MadlibFiller {
         }
 
         Matcher matcher = pattern.matcher(blankedMadlib);
+        int lastAppendPosition = 0;
 
         while (matcher.find()) {
             String posLiteral = matcher.group(1);
             if (replacementWords.isEmpty() || !PosMap.posMap.containsValue(posLiteral)) {
-                matcher.appendReplacement(sb, matcher.group());
+                sb.append(blankedMadlib, lastAppendPosition, matcher.end());
+                lastAppendPosition = matcher.end();
                 continue;
             }
             String replacementWord = replacementWords.poll().toLowerCase();
 
             /* Choose correct article "a" versus "an" to prepend before replacement word, if applicable:
-                • Take last four characters of string buffer to check for " a " or " an "
-                • Check if they match to "a" or "an" – assign article to non-null
+                • Read up to 4 characters immediately before the current match in blankedMadlib
+                • Check if they end with " a " or " an " - assign article to non-null
                 • If non-null, identify if replacement word begins with a vowel and assign "a" or "an" to the appropriate value
-                • If the actual article isn't already correct, slice the old article off of the buffer
-                • Append new article to replacement word
+                • If the actual article isn't already correct, append the inter-match text up to (not including)
+                  the old article, then append the corrected article + replacement word
              */
             String article = null;
-            String potentialArticle = sb.substring(Math.max(0, sb.length() - 4));
+            String potentialArticle = blankedMadlib.substring(Math.max(0, matcher.start() - 4), matcher.start());
 
             if (potentialArticle.equals(" a ") || potentialArticle.equals(" a\n")) {
                 article = "a";
@@ -78,18 +80,23 @@ public class MadlibFiller {
             if (article != null) {
                 String correctArticle = correctArticleFor(replacementWord);
                 if (!correctArticle.equals(article)) {
-                    sb.delete(sb.length() - article.length() - 1, sb.length());
-                    replacementWord = correctArticle + " " + replacementWord;
+                    // articleStart is the position of the first letter of the old article in blankedMadlib.
+                    // Append everything up to (not including) that letter; this preserves the space before it.
+                    int articleStart = matcher.start() - article.length() - 1;
+                    sb.append(blankedMadlib, lastAppendPosition, articleStart);
+                    sb.append(correctArticle).append(" ").append(replacementWord);
+                    lastAppendPosition = matcher.end();
+                    continue;
                 }
             }
 
-            // Use quoteReplacement over the replacement word due to appendReplacement following RegEx formatting
-            // appendReplacement appends everything since the previous match and then replaces the next word
-            matcher.appendReplacement(sb, Matcher.quoteReplacement(replacementWord));
+            sb.append(blankedMadlib, lastAppendPosition, matcher.start());
+            sb.append(replacementWord);
+            lastAppendPosition = matcher.end();
         }
 
-        // Add anything left in the scanner
-        matcher.appendTail(sb);
+        // Add anything left after the last match
+        sb.append(blankedMadlib, lastAppendPosition, blankedMadlib.length());
 
         return sb.toString();
     }

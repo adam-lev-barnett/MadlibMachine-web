@@ -31,9 +31,11 @@ public class MadlibFillerTest {
 
         assertEquals("The goofy purple potato wiggles over the boring clown.", result);
     }
+
+    // Test covers first word and subsequent words
     @Test
     public void testMadlibFillerUsesCorrectAnOrA() {
-        String blankText = "An [adjective] [adjective] [verb, past-tense] [verb ending in -s] over the [adjective] [noun].";
+        String blankText = "An [adjective] [adjective] [verb, past-tense] [verb ending in -s] over an [adjective] [noun].";
         Queue<String> replacementWords = new ArrayDeque<>();
         replacementWords.add("goofy");
         replacementWords.add("purple");
@@ -44,7 +46,9 @@ public class MadlibFillerTest {
 
         String result = madlibFiller.fillInMadlib(blankText, replacementWords);
 
-        assertEquals("A goofy purple potato wiggles over the boring clown.", result);
+        assertEquals("A goofy purple potato wiggles over a boring clown.", result);
     }
+
+
 
 }
