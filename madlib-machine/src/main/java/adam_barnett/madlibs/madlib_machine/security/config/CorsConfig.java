@@ -10,7 +10,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOriginPatterns("https://*.vercel.app", "http://localhost:*")
+                .allowedOriginPatterns("https://*.vercel.app", "http://localhost:*", "https://madlib-machine.app", "https://www.madlib-machine.app")
                 .allowedMethods("GET", "POST", "OPTIONS")
                 .allowedHeaders("*");
     }
