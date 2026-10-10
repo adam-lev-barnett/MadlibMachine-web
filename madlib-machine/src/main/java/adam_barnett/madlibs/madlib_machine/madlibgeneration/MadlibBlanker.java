@@ -93,7 +93,7 @@ public class MadlibBlanker {
      * Nothing is added to the punctuation character itself*/
     private void justWriteWord(CoreLabel token, boolean isFirstWord, StringBuilder sb) {
 
-        if (token.word().matches("\\p{Punct}’‘") || isFirstWord) {
+        if (token.word().matches("\\p{Punct}[’‘']") || isFirstWord) {
             sb.append(token.get(CoreAnnotations.TextAnnotation.class));
         }
         else sb.append(" " + token.get(CoreAnnotations.TextAnnotation.class));
