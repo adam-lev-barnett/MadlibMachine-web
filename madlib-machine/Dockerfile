@@ -19,7 +19,8 @@ WORKDIR /app
 COPY --from=build /app/target/madlibFile-machine-*.jar app.jar
 
 # Memory settings for Stanford NLP
-ENV JAVA_OPTS="-Xmx3g -Xms2g -XX:+UseSerialGC"
+# -XX:-UseBASE64Intrinsics = temporary mitigation for CVE-2026-114938 (Java4Shell)
+ENV JAVA_OPTS="-Xmx3g -Xms2g -XX:+UseSerialGC -XX:-UseBASE64Intrinsics"
 
 EXPOSE 8080
 
